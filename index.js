@@ -16,8 +16,8 @@ app.get('/', function(request, response) {
 			item.updateDate = dateFormat(entry.pubDate, "isoDateTime");
 			item.titleText = entry.title;
 			item.mainText = entry.content;
-			item.streamUrl = entry.enclosure.url;
-			item.redirectionURL = entry.link;
+			item.streamUrl = entry.enclosure.url.replace(/http:\/\//, 'https://');
+			item.redirectionUrl = entry.link.replace(/http:\/\//, 'https://');
 			items.push(item);
 		});
 		if (limit < 2) {
