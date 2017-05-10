@@ -1,16 +1,25 @@
-var Feed = require('rss-to-json');
+var parser = require('rss-parser');
 var express = require('express');
 var app = express();
 
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/', function(request, response) {
-	
-	Feed.load(decodeURI(request.query.feed), function(err, rss) {
-		var items = rss.items;
+	parser.parseURL(decodeURI(request.query.feed), function(err, parsed) {
 		var res;
-		console.log(!request.query.limit);
-		if (!request.query.limit) {
+		var limit = (!request.query.limit) ? 1 : parseInt(request.query.limit, 10);
+		var items = [];
+		parsed.feed.entries.forEach(function(entry) {
+			var item = {};
+			item.uid = entry.guid;
+			item.updateDate = entry.pubDate;
+			item.titleText = entry.title;
+			item.mainText = entry.content;
+			item.streamUrl = entry.enclosure.url;
+			item.redirectionURL = entry.link;
+			items.push(item);
+		});
+		if (limit < 2) {
 			res = items[0];
 		}
 		else {
