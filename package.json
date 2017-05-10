@@ -12,7 +12,7 @@
     "express": "^4.15.2",
     "nodemon": "^1.11.0",
     "rss-to-json": "^1.0.2"
-  }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/andrewalba/feedburner-parser.git"
