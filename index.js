@@ -1,29 +1,29 @@
 var Feed = require('rss-to-json');
 var express = require('express');
 var app = express();
-var port = 8080;
 
+app.set('port', (process.env.PORT || 5000));
 
-app.listen(port, function() {
-	console.log('app started');
-});
-
-app.get('/', function(req, res) {
+app.get('/', function(request, response) {
 	
-	Feed.load(decodeURI(req.query.feed), function(err, rss) {
+	Feed.load(decodeURI(request.query.feed), function(err, rss) {
 		var items = rss.items;
-		var response;
-		console.log(!req.query.limit);
-		if (!req.query.limit) {
-			response = items[0];
+		var res;
+		console.log(!request.query.limit);
+		if (!request.query.limit) {
+			res = items[0];
 		}
 		else {
-			response = [];
-			for (var i=0; i < parseInt(req.query.limit, 10); i++) {
-				response.push(items[i]);
+			res = [];
+			for (var i=0; i < parseInt(request.query.limit, 10); i++) {
+				res.push(items[i]);
 			}
 		}
-		res.setHeader('Content-Type', 'application/json');
-		res.send(response);
+		response.setHeader('Content-Type', 'application/json');
+		response.send(res);
 	});
+});
+
+app.listen(app.get('port'), function() {
+	console.log('Node app is running on port', app.get('port'));
 });
