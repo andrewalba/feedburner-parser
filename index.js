@@ -1,4 +1,5 @@
 var parser = require('rss-parser');
+var dateFormat = require('dateformat');
 var express = require('express');
 var app = express();
 
@@ -12,7 +13,7 @@ app.get('/', function(request, response) {
 		parsed.feed.entries.forEach(function(entry) {
 			var item = {};
 			item.uid = entry.guid;
-			item.updateDate = entry.pubDate;
+			item.updateDate = dateFormat(entry.pubDate, "isoDateTime");
 			item.titleText = entry.title;
 			item.mainText = entry.content;
 			item.streamUrl = entry.enclosure.url;
