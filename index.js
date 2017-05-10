@@ -6,7 +6,18 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/', function(request, response) {
-	parser.parseURL(decodeURI(request.query.feed), function(err, parsed) {
+	response.setHeader('Content-Type', 'application/json');
+	if (!request.query.feed) {
+		var message = 'No feed has been provided';
+		console.log(message);
+		response.send(message);
+	}
+	parser.parseURL(decodeURI(request.query.feed), function(err, parsed) {		
+		if (err) {
+			var message = 'Error while fetching feed: ' . err;
+			console.log(message)
+			response.send(message);
+		}
 		var res;
 		var limit = (!request.query.limit) ? 1 : parseInt(request.query.limit, 10);
 		var items = [];
@@ -29,7 +40,7 @@ app.get('/', function(request, response) {
 				res.push(items[i]);
 			}
 		}
-		response.setHeader('Content-Type', 'application/json');
+		
 		response.send(res);
 	});
 });
